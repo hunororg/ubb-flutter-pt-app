@@ -2,15 +2,29 @@
 
 Personal trainer calendar integration app.
 
-## Getting Started
+## Application Roles
+- Admin (Developers)
+- PT (Personal Trainer)
+- User (Trainee)
 
-This project is a starting point for a Flutter application.
+## Registration
+- On opening app for the first time, a log in will be prompted
+- Registration possible with PT code
 
-A few resources to get you started if this is your first Flutter project:
+## Home Page
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### For Users
+- List with upcoming programmed training sessions
+- On click give more details about the session
+- "+" button bottom right for programming a new training session
+- On clicking the button will give available options for the upcoming days (max upcoming 2 weeks)
+- If selecting directly the next available spot, approval of the PT is not necessary
+- Optional: on PT approval of the session getting notification (if selecting not connected spot)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### For PT
+- List of pending training session, waiting for approval
+- Button to open all user (trainee) profiles with some significant information
+- opening daily calendar for upcoming days, with sessions and trainee names
+
+### For Admin
+- Developer mode, adding PTs
