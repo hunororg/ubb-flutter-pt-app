@@ -1,4 +1,8 @@
 enum AuthMethod {
-  google,
-  github
+  google("google"),
+  github("github");
+
+  final String value;
+
+  const AuthMethod(this.value);
 }

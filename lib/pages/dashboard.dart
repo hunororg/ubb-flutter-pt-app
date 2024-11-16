@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ubb_flutter_pt_app/model/bottomnav_option_types.dart';
-import 'package:ubb_flutter_pt_app/pages/bottomnav_pages/bottomnav_dashboard.dart';
-import 'package:ubb_flutter_pt_app/pages/bottomnav_pages/bottomnav_history.dart';
+import 'package:ubb_flutter_pt_app/model/trainer_bottomnav_option_types.dart';
+import 'package:ubb_flutter_pt_app/model/user_bottomnav_option_types.dart';
+import 'package:ubb_flutter_pt_app/model/user_role.dart';
 
 import '../state/AuthProvider.dart';
 
@@ -16,15 +17,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<Dashboard> {
-  static final Map<BottomNavOptionTypes, Widget> _widgetOptions = {
-    BottomNavOptionTypes.home: const BottomNavDashboard(),
-    BottomNavOptionTypes.history: const BottomNavHistory(),
-  };
-  static final Map<BottomNavOptionTypes, String> _widgetTitles = {
-    BottomNavOptionTypes.home: 'Dashboard',
-    BottomNavOptionTypes.history: 'History',
-  };
-
   int currentPageIndex = 0;
 
   void _onItemTapped(int index) {
@@ -33,12 +25,39 @@ class _MyHomePageState extends State<Dashboard> {
     });
   }
 
+  Map<BottomNavOptionTypes, Widget> getWidgetOptions(AuthProvider authProvider) {
+    if (authProvider.userData?.userRole == UserRole.trainer) {
+      return TrainerBottomNavOptionTypes.widgetOptions;
+    }
+    return UserBottomNavOptionTypes.widgetOptions;
+  }
+
+  List<Widget> getWidgets(AuthProvider authProvider) {
+    if (authProvider.userData?.userRole == UserRole.trainer) {
+      return TrainerBottomNavOptionTypes.widgets;
+    }
+    return UserBottomNavOptionTypes.widgets;
+  }
+
+  String getTitle(AuthProvider authProvider) {
+    if (authProvider.userData?.userRole == UserRole.trainer) {
+      return TrainerBottomNavOptionTypes.widgetTitles[TrainerBottomNavOptionTypes.fromIndex(currentPageIndex)]!;
+    }
+    return UserBottomNavOptionTypes.widgetTitles[UserBottomNavOptionTypes.fromIndex(currentPageIndex)]!;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final Map<BottomNavOptionTypes, Widget> widgetOptions =
+      getWidgetOptions(authProvider);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(_widgetTitles[BottomNavOptionTypes.fromIndex(currentPageIndex)]!),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(getTitle(authProvider),
+          style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
         actions: [
           Consumer<AuthProvider>(
             builder: (context, authProvider, child) {
@@ -56,9 +75,26 @@ class _MyHomePageState extends State<Dashboard> {
           )
         ],
       ),
-      body: IndexedStack(
-        index: currentPageIndex,
-        children: _widgetOptions.values.toList(),
+      extendBodyBehindAppBar: true,
+      body: Column( // Use a Column instead of a Stack
+        children: [
+          Container(
+            height: 0.25 * MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/dashboard.png'),
+                fit: BoxFit.cover,
+                alignment: Alignment.centerRight, // Align image to the right
+              ),
+            ),
+          ),
+          Expanded( // Use Expanded to fill the remaining space
+            child: IndexedStack(
+              index: currentPageIndex,
+              children: widgetOptions.values.toList(),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -73,18 +109,7 @@ class _MyHomePageState extends State<Dashboard> {
         onDestinationSelected: (int index) {
           _onItemTapped(index);
         },
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.calendar_month),
-            icon: Icon(Icons.calendar_month_outlined),
-            label: 'History of trainings',
-          )
-        ],
+        destinations: getWidgets(authProvider),
       ),
     );
   }

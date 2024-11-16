@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ubb_flutter_pt_app/extensions/string_extensions.dart';
 
-import '../state/AuthProvider.dart' as local_auth_provider;
+import '../state/AuthProvider.dart' as local_auth_provider; // my auth provider
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
@@ -32,7 +33,13 @@ class UserProfile extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                user.email ?? 'N/A',
+                authProvider.userData?.email ?? 'N/A',
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Role: ${authProvider.userData?.userRole.value.capitalize()
+                    ?? 'N/A'}",
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 32),
