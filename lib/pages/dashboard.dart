@@ -66,11 +66,10 @@ class _MyHomePageState extends State<Dashboard> {
                     if (authProvider.isLoggedIn) {
                       Navigator.of(context).pushNamed('/user-profile');
                     }
-                      // } else {
-                    //   Navigator.of(context).pushNamed('/login');
-                    // }
                   },
-                  icon: const Icon(Icons.person));
+                  icon: const Icon(Icons.person),
+                  color: Colors.white
+              );
             },
           )
         ],
