@@ -29,7 +29,7 @@ class TrainerBottomNavOptionTypes {
   static final Map<BottomNavOptionTypes, String> widgetTitles = {
     BottomNavOptionTypes.home: 'Dashboard',
     BottomNavOptionTypes.history: 'History',
-    BottomNavOptionTypes.adminHome: 'Admin Dashboard',
+    BottomNavOptionTypes.adminHome: 'Trainer Dashboard',
   };
 
   static final List<Widget> widgets = const <Widget>[

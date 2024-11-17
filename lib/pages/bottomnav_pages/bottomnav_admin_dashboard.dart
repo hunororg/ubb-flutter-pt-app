@@ -7,7 +7,7 @@ class BottomNavAdminDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Admin Dashboard'),
+        child: Text('Trainer Dashboard'),
       ),
     );
   }
