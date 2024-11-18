@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ubb_flutter_pt_app/pages/bottomnav_pages/bottomnav_admin_dashboard.dart';
 
@@ -32,7 +31,7 @@ class TrainerBottomNavOptionTypes {
     BottomNavOptionTypes.adminHome: 'Trainer Dashboard',
   };
 
-  static final List<Widget> widgets = const <Widget>[
+  static const List<Widget> widgets = <Widget>[
     NavigationDestination(
       selectedIcon: Icon(Icons.home),
       icon: Icon(Icons.home_outlined),

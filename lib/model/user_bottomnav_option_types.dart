@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ubb_flutter_pt_app/model/bottomnav_option_types.dart';
 
@@ -27,7 +26,7 @@ class UserBottomNavOptionTypes {
     BottomNavOptionTypes.history: 'History',
   };
 
-  static final List<Widget> widgets = const <Widget>[
+  static const List<Widget> widgets = <Widget>[
     NavigationDestination(
       selectedIcon: Icon(Icons.home),
       icon: Icon(Icons.home_outlined),
