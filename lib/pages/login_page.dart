@@ -93,7 +93,7 @@ class LoginPage extends StatelessWidget {
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.black, width: 2),
+                          side: const BorderSide(color: Colors.black, width: 2),
                           borderRadius: BorderRadius.circular(32),
                         ),
                       ),

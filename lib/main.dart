@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ubb_flutter_pt_app/model/shared_pref_constants.dart';
 import 'package:ubb_flutter_pt_app/pages/dashboard.dart';
 import 'package:ubb_flutter_pt_app/pages/new-appointment.dart';
 import 'package:ubb_flutter_pt_app/pages/user_profile.dart';
@@ -14,9 +16,19 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Read shared prefs
+  final sharedPreferences = await SharedPreferences.getInstance();
+  final authMethod = sharedPreferences.getString(authMethodKey);
+  final idToken = sharedPreferences.getString(idTokenKey);
+  final accessToken = sharedPreferences.getString(accessTokenKey);
+
   runApp(
     ChangeNotifierProvider(
-      create: (context) => AuthProvider(),
+      create: (context) =>
+        (idToken != null && accessToken != null && authMethod != null)
+          ? AuthProvider.withAuthenticated(authMethod, accessToken, idToken)
+          : AuthProvider(),
       child: const MyApp(),
     ),
   );
