@@ -85,20 +85,20 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: const Text('Sign in with Google'),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        authProvider.login(context, AuthMethod.github);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          side: const BorderSide(color: Colors.black, width: 2),
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                      ),
-                      child: const Text('Sign in with GitHub'),
-                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     authProvider.login(context, AuthMethod.github);
+                    //   },
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: Colors.white,
+                    //     foregroundColor: Colors.black,
+                    //     shape: RoundedRectangleBorder(
+                    //       side: const BorderSide(color: Colors.black, width: 2),
+                    //       borderRadius: BorderRadius.circular(32),
+                    //     ),
+                    //   ),
+                    //   child: const Text('Sign in with GitHub'),
+                    // ),
                   ],
                 )
               ),

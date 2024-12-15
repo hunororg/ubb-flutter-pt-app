@@ -1,7 +1,6 @@
 enum BottomNavOptionTypes {
   home(0),
-  history(1),
-  adminHome(2);
+  statistics(1);
 
   final int selectedIndex;
 
