@@ -1,6 +1,6 @@
 enum AuthMethod {
   google("google"),
-  github("github");
+  facebook("facebook");
 
   final String value;
 

@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:github_sign_in_plus/github_sign_in_plus.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ubb_flutter_pt_app/dao/UserDataDao.dart';
+import 'package:ubb_flutter_pt_app/dao/user_data_dao.dart';
 import 'package:ubb_flutter_pt_app/model/login_method.dart';
 import 'package:ubb_flutter_pt_app/utils/toast.dart';
 
@@ -15,13 +14,13 @@ import '../model/userdata.dart';
 
 class AuthProvider extends ChangeNotifier {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final GitHubSignIn _githubSignIn = GitHubSignIn(
+  /*final GitHubSignIn _githubSignIn = GitHubSignIn(
     clientId: "Ov23lioY4FNIQrb8gQRR",
     clientSecret: "eefb7e3f64908c1e835fbad6f7a5843d8b6c433a",
     redirectUrl: "https://ubb-flutter-pt-app.firebaseapp.com/__/auth/handler",
     title: "GitHub Connection",
     centerTitle: false
-  );
+  );*/
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final UserDataDao _userDataDao = UserDataDao();
 
@@ -31,8 +30,6 @@ class AuthProvider extends ChangeNotifier {
       String idToken) {
     if (authMethod == AuthMethod.google.value) {
       _loginWithGoogleAtAppStart(idToken, accessToken);
-      _isLoggedIn = true;
-    } else if (authMethod == AuthMethod.github.value) {
       _isLoggedIn = true;
     } else {
       log("Unknown auth method: $authMethod");
@@ -50,8 +47,8 @@ class AuthProvider extends ChangeNotifier {
       case AuthMethod.google:
         _loginWithGoogle(context);
         break;
-      case AuthMethod.github:
-        _loginWithGithub(context);
+      case AuthMethod.facebook:
+        break;
     }
   }
 
@@ -95,6 +92,7 @@ class AuthProvider extends ChangeNotifier {
         context);
   }
 
+  /*
   void _loginWithGithub(BuildContext context) async {
     var result = await _githubSignIn.signIn(context);
     if (result.status != GitHubSignInResultStatus.ok) {
@@ -107,7 +105,7 @@ class AuthProvider extends ChangeNotifier {
 
     _trySigningInWithAuthCredential(AuthMethod.github, githubAuthCredential,
         context);
-  }
+  }*/
 
   void _trySigningInWithAuthCredential(AuthMethod authMethod,
       OAuthCredential oauthCredential, BuildContext? context) async {
@@ -120,12 +118,7 @@ class AuthProvider extends ChangeNotifier {
           var checkUserData = UserData(userCredential.user!.email!, authMethod,
               UserRole.user);
           _handleSuccessFullLogin(context, oauthCredential, checkUserData);
-        } else if (authMethod == AuthMethod.github) {
-          var userEmail = userCredential.user!.providerData[0].email;
-          var checkUserData = UserData(userEmail!, authMethod, UserRole.user);
-          _handleSuccessFullLogin(context, oauthCredential, checkUserData);
         }
-
       }
     } on FirebaseAuthException catch (e) {
       String message;
@@ -169,9 +162,6 @@ class AuthProvider extends ChangeNotifier {
     if (authMethod == AuthMethod.google) {
       await sharedPreferences.setString(idTokenKey,
           oauthCredential.idToken!);
-      await sharedPreferences.setString(accessTokenKey,
-          oauthCredential.accessToken!);
-    } else if (authMethod == AuthMethod.github) {
       await sharedPreferences.setString(accessTokenKey,
           oauthCredential.accessToken!);
     }
