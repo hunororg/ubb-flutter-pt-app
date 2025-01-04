@@ -43,6 +43,18 @@ class UserProfile extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               ListTile(
+                leading: const Icon(Icons.person_4),
+                title: const Text('Account details',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+                onTap: () {
+                  // Handle navigation or action here
+                  // For example, navigate to a new screen:
+                  Navigator.pushNamed(context, '/modifyTrainingOffering');
+                },
+                trailing: const Icon(Icons.edit),
+              ),
+              const Divider(height: 0),
+              ListTile(
                 leading: const Icon(Icons.local_offer),
                 title: const Text('Manage training package',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
@@ -55,8 +67,8 @@ class UserProfile extends StatelessWidget {
               ),
               const Divider(height: 0),
               ListTile(
-                leading: const Icon(Icons.person_4),
-                title: const Text('Manage account details',
+                leading: const Icon(Icons.notifications_on),
+                title: const Text('Notifications',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
                 onTap: () {
                   // Handle navigation or action here

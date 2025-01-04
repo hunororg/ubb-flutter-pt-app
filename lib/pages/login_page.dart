@@ -15,12 +15,12 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Image(
-            image: AssetImage('assets/images/logo.png'),
-          )
-        ),
+        // leading: const Padding(
+        //   padding: EdgeInsets.all(8.0),
+        //   child: Image(
+        //     image: AssetImage('assets/images/logo.png'),
+        //   )
+        // ),
       ),
       extendBodyBehindAppBar: true,
       body: Container(
