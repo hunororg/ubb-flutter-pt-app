@@ -13,6 +13,8 @@ import '../model/user_role.dart';
 import '../model/userdata.dart';
 
 class AuthProvider extends ChangeNotifier {
+  final String KEY_EMAIL = "email";
+
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   /*final GitHubSignIn _githubSignIn = GitHubSignIn(
     clientId: "Ov23lioY4FNIQrb8gQRR",
@@ -115,8 +117,13 @@ class AuthProvider extends ChangeNotifier {
 
       if (userCredential.user != null) {
         if (authMethod == AuthMethod.google) {
-          var checkUserData = UserData(userCredential.user!.email!, authMethod,
-              UserRole.user);
+          if (!userCredential.additionalUserInfo!.profile!.containsKey(KEY_EMAIL)) {
+            _handleErrorLogin(context, "No email found in Google profile");
+            return;
+          }
+
+          String email = userCredential.additionalUserInfo!.profile![KEY_EMAIL];
+          var checkUserData = UserData(email, authMethod, UserRole.user);
           _handleSuccessFullLogin(context, oauthCredential, checkUserData);
         }
       }
@@ -188,8 +195,8 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  void _handleErrorLogin(BuildContext context, String message) {
-    if (context.mounted) {
+  void _handleErrorLogin(BuildContext? context, String message) {
+    if (context != null && context.mounted) {
       showToast(context, message);
     }
   }
