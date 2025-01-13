@@ -41,50 +41,62 @@ class _MyHomePageState extends State<Dashboard> {
 
   String getTitle(AuthProvider authProvider) {
     if (authProvider.userData?.userRole == UserRole.trainer) {
-      return TrainerBottomNavOptionTypes.widgetTitles[TrainerBottomNavOptionTypes.fromIndex(currentPageIndex)]!;
+      return TrainerBottomNavOptionTypes
+          .widgetTitles[TrainerBottomNavOptionTypes.fromIndex(currentPageIndex)]!;
     }
-    return UserBottomNavOptionTypes.widgetTitles[UserBottomNavOptionTypes.fromIndex(currentPageIndex)]!;
+    return UserBottomNavOptionTypes
+        .widgetTitles[UserBottomNavOptionTypes.fromIndex(currentPageIndex)]!;
   }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final Map<BottomNavOptionTypes, Widget> widgetOptions =
-      getWidgetOptions(authProvider);
+    getWidgetOptions(authProvider);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text(getTitle(authProvider),
-          style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
+        title: Text(
+          getTitle(authProvider),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       extendBodyBehindAppBar: true,
-      body: Column( // Use a Column instead of a Stack
-        children: [
-          Container(
-            height: 0.2 * MediaQuery.of(context).size.height,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/dashboard.png'),
-                fit: BoxFit.cover,
-                alignment: Alignment.centerRight, // Align image to the right
+      body: LayoutBuilder( // Use LayoutBuilder to adapt layout dynamically
+        builder: (context, constraints) {
+          return Column(
+            children: [
+              Container(
+                height: 0.15 * constraints.maxHeight, // Reduce image height
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/dashboard.png'),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.centerRight,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Expanded( // Use Expanded to fill the remaining space
-            child: IndexedStack(
-              index: currentPageIndex,
-              children: widgetOptions.values.toList(),
-            ),
-          ),
-        ],
+              Expanded(
+                child: IndexedStack(
+                  index: currentPageIndex,
+                  children: widgetOptions.values.toList(),
+                ),
+              ),
+            ],
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed('/new-appointment');
         },
-        tooltip: 'Increment',
+        tooltip: 'Add Appointment',
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: NavigationBar(

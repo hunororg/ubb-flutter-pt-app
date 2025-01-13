@@ -21,7 +21,7 @@ class _NewAppointmentState extends State<NewAppointment> {
     DateTime endTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, 22);
 
     while (startTime.isBefore(endTime)) {
-      final end = startTime.add(const Duration(hours: 1));
+      final end = startTime.add(const Duration(hours: 1, minutes: 30));
       intervals.add('${DateFormat('hh:mm a').format(startTime)} - ${DateFormat('hh:mm a').format(end)}');
       startTime = end;
     }
@@ -36,6 +36,10 @@ class _NewAppointmentState extends State<NewAppointment> {
 
   @override
   Widget build(BuildContext context) {
+    // Set the valid range for appointments (next 2 weeks)
+    final DateTime firstDay = DateTime.now();
+    final DateTime lastDay = DateTime.now().add(const Duration(days: 14));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Appointment'),
@@ -46,17 +50,11 @@ class _NewAppointmentState extends State<NewAppointment> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TableCalendar(
-              firstDay: DateTime.now(),
-              lastDay: DateTime(2100),
+              firstDay: firstDay,
+              lastDay: lastDay,
               focusedDay: _focusedDate,
               selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
               onDaySelected: (selectedDay, focusedDay) {
-                if (selectedDay.isBefore(DateTime.now())) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Cannot select past dates!')),
-                  );
-                  return;
-                }
                 setState(() {
                   _selectedDate = selectedDay;
                   _focusedDate = focusedDay;
@@ -81,12 +79,10 @@ class _NewAppointmentState extends State<NewAppointment> {
                 formatButtonVisible: false,
                 titleCentered: true,
               ),
-              enabledDayPredicate: (day) => day.isAfter(DateTime.now().subtract(const Duration(days: 1))),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Selected Date: ${_selectedDate.toLocal()}'.split(' ')[0],
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              enabledDayPredicate: (day) =>
+              (day.isAfter(firstDay.subtract(const Duration(days: 1))) &&
+                  day.isBefore(lastDay.add(const Duration(days: 1)))) ||
+                  isSameDay(day, firstDay),  // Allow today to be selected
             ),
             const SizedBox(height: 20),
             const Text(
@@ -114,18 +110,50 @@ class _NewAppointmentState extends State<NewAppointment> {
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Perform the action to save the selected date and time
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Appointment set for ${_selectedDate.toLocal().toString().split(' ')[0]} at $_selectedTimeInterval',
+            // Display selected date and time interval with basic framing and centered text
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${DateFormat('EEEE, yyyy-MM-dd').format(_selectedDate)}',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                );
-              },
-              child: const Text('Confirm Appointment'),
+                    const SizedBox(height: 10),
+                    Text(
+                      '$_selectedTimeInterval',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Perform the action to save the selected date and time
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Appointment set for ${DateFormat('EEEE, yyyy-MM-dd').format(_selectedDate)} at $_selectedTimeInterval',
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0), // Make button larger
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+                child: const Text('Confirm Appointment'),
+              ),
             ),
           ],
         ),
