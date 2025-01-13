@@ -14,10 +14,9 @@ class UserProfile extends StatelessWidget {
     final authProvider = Provider.of<local_auth_provider.AuthProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-      ),
       body: Center(
+        child: Padding( // Add Padding here
+        padding: const EdgeInsets.only(top: 18.0), // Adjust padding as needed
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -42,7 +41,44 @@ class UserProfile extends StatelessWidget {
                     ?? 'N/A'}",
                 style: const TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
+              ListTile(
+                leading: const Icon(Icons.person_4),
+                title: const Text('Account details',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+                onTap: () {
+                  // Handle navigation or action here
+                  // For example, navigate to a new screen:
+                  Navigator.pushNamed(context, '/modifyTrainingOffering');
+                },
+                trailing: const Icon(Icons.edit),
+              ),
+              const Divider(height: 0),
+              ListTile(
+                leading: const Icon(Icons.local_offer),
+                title: const Text('Manage training package',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+                onTap: () {
+                  // Handle navigation or action here
+                  // For example, navigate to a new screen:
+                  Navigator.pushNamed(context, '/modifyTrainingOffering');
+                },
+                trailing: const Icon(Icons.edit),
+              ),
+              const Divider(height: 0),
+              ListTile(
+                leading: const Icon(Icons.notifications_on),
+                title: const Text('Notifications',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+                onTap: () {
+                  // Handle navigation or action here
+                  // For example, navigate to a new screen:
+                  Navigator.pushNamed(context, '/modifyTrainingOffering');
+                },
+                trailing: const Icon(Icons.edit),
+              ),
+              const Divider(height: 0),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
                   // Sign out logic
@@ -59,6 +95,7 @@ class UserProfile extends StatelessWidget {
           ],
         ),
       ),
+    )
     );
   }
 }

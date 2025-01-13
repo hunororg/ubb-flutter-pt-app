@@ -58,27 +58,12 @@ class _MyHomePageState extends State<Dashboard> {
         elevation: 0,
         title: Text(getTitle(authProvider),
           style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),),
-        actions: [
-          Consumer<AuthProvider>(
-            builder: (context, authProvider, child) {
-              return IconButton(
-                  onPressed: () {
-                    if (authProvider.isLoggedIn) {
-                      Navigator.of(context).pushNamed('/user-profile');
-                    }
-                  },
-                  icon: const Icon(Icons.person),
-                  color: Colors.white
-              );
-            },
-          )
-        ],
       ),
       extendBodyBehindAppBar: true,
       body: Column( // Use a Column instead of a Stack
         children: [
           Container(
-            height: 0.25 * MediaQuery.of(context).size.height,
+            height: 0.2 * MediaQuery.of(context).size.height,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/dashboard.png'),
@@ -111,14 +96,5 @@ class _MyHomePageState extends State<Dashboard> {
         destinations: getWidgets(authProvider),
       ),
     );
-  }
-}
-
-class DashboardWidget extends StatelessWidget {
-  const DashboardWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Dashboard(title: 'My trainings');
   }
 }

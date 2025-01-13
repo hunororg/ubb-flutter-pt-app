@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ubb_flutter_pt_app/pages/bottomnav_pages/bottomnav_admin_dashboard.dart';
+import 'package:ubb_flutter_pt_app/pages/user_profile.dart';
 
-import '../pages/bottomnav_pages/bottomnav_dashboard.dart';
-import '../pages/bottomnav_pages/bottomnav_history.dart';
+import '../pages/bottomnav_pages/bottomnav_statistics.dart';
 import 'bottomnav_option_types.dart';
 
 class TrainerBottomNavOptionTypes {
@@ -11,24 +11,24 @@ class TrainerBottomNavOptionTypes {
       case 0:
         return BottomNavOptionTypes.home;
       case 1:
-        return BottomNavOptionTypes.history;
+        return BottomNavOptionTypes.statistics;
       case 2:
-        return BottomNavOptionTypes.adminHome;
+        return BottomNavOptionTypes.profile;
       default:
         return BottomNavOptionTypes.home;
     }
   }
 
   static final Map<BottomNavOptionTypes, Widget> widgetOptions = {
-    BottomNavOptionTypes.home: const BottomNavDashboard(),
-    BottomNavOptionTypes.history: const BottomNavHistory(),
-    BottomNavOptionTypes.adminHome: const BottomNavAdminDashboard(),
+    BottomNavOptionTypes.home: const BottomNavAdminDashboard(),
+    BottomNavOptionTypes.statistics: const BottomNavStatistics(),
+    BottomNavOptionTypes.profile: const UserProfile(),
   };
 
   static final Map<BottomNavOptionTypes, String> widgetTitles = {
     BottomNavOptionTypes.home: 'Dashboard',
-    BottomNavOptionTypes.history: 'History',
-    BottomNavOptionTypes.adminHome: 'Trainer Dashboard',
+    BottomNavOptionTypes.statistics: 'Statistics',
+    BottomNavOptionTypes.profile: 'Profile',
   };
 
   static const List<Widget> widgets = <Widget>[
@@ -38,14 +38,14 @@ class TrainerBottomNavOptionTypes {
       label: 'Dashboard',
     ),
     NavigationDestination(
-      selectedIcon: Icon(Icons.calendar_month),
-      icon: Icon(Icons.calendar_month_outlined),
-      label: 'History of trainings',
+      selectedIcon: Icon(Icons.area_chart),
+      icon: Icon(Icons.area_chart_outlined),
+      label: 'Statistics',
     ),
     NavigationDestination(
-        selectedIcon: Icon(Icons.admin_panel_settings),
-        icon: Icon(Icons.admin_panel_settings_outlined),
-        label: 'Trainer Dashboard'
+      selectedIcon: Icon(Icons.person),
+      icon: Icon(Icons.person_outline),
+      label: 'Profile',
     )
   ];
 }

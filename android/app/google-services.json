@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "981492813352-00aapln3rvieu0dil03lab43a981vn6b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.ubb.pdae.ptapp.ubb_flutter_pt_app",
+            "certificate_hash": "2214b87265f47e3f4961da0fff33f7655eab9448"
+          }
+        },
+        {
           "client_id": "981492813352-ntunut14p1et9ueaoe0seil48d4mso60.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
