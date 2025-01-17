@@ -39,9 +39,10 @@ class AuthProvider extends ChangeNotifier {
   }
 
   bool _isLoggedIn = false;
-  UserData? _userData;
+  static UserData? _userData;
 
   bool get isLoggedIn => _isLoggedIn;
+  static UserData? get userDataStatic => _userData;
   UserData? get userData => _userData;
 
   void login(BuildContext context, AuthMethod loginMethod) async {

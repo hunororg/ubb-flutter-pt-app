@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:ubb_flutter_pt_app/dao/appointment_dao.dart';
+import 'package:ubb_flutter_pt_app/state/AuthProvider.dart';
 
 class NewAppointment extends StatefulWidget {
   const NewAppointment({super.key});
@@ -13,6 +15,7 @@ class _NewAppointmentState extends State<NewAppointment> {
   DateTime _selectedDate = DateTime.now();
   DateTime _focusedDate = DateTime.now();
   String? _selectedTimeInterval;
+  final AppointmentDao _appointmentDao = AppointmentDao();
 
   // Generate time intervals from 9:00 AM to 10:00 PM
   List<String> get _timeIntervals {
@@ -116,6 +119,8 @@ class _NewAppointmentState extends State<NewAppointment> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                _appointmentDao.saveAppointment(AuthProvider.userDataStatic!.email, _selectedDate, _selectedTimeInterval!);
+
                 // Perform the action to save the selected date and time
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -124,6 +129,8 @@ class _NewAppointmentState extends State<NewAppointment> {
                     ),
                   ),
                 );
+
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
               },
               child: const Text('Confirm Appointment'),
             ),
