@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubb_flutter_pt_app/model/shared_pref_constants.dart';
 import 'package:ubb_flutter_pt_app/pages/dashboard.dart';
 import 'package:ubb_flutter_pt_app/pages/new_appointment.dart';
 import 'package:ubb_flutter_pt_app/pages/user_profile.dart';
-import 'package:ubb_flutter_pt_app/state/AuthProvider.dart';
+import 'package:ubb_flutter_pt_app/state/auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ubb_flutter_pt_app/state/navigation_service.dart';
 import 'firebase_options.dart';
 
 import 'pages/login_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -22,6 +25,10 @@ void main() async {
   final authMethod = sharedPreferences.getString(authMethodKey);
   final idToken = sharedPreferences.getString(idTokenKey);
   final accessToken = sharedPreferences.getString(accessTokenKey);
+
+  if (!(idToken != null && accessToken != null && authMethod != null)) {
+    FlutterNativeSplash.remove();
+  }
 
   runApp(
     ChangeNotifierProvider(
@@ -47,7 +54,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
       ),
-      initialRoute: authProvider.isLoggedIn ? '/' : '/login',
+      navigatorKey: NavigationService.navigatorKey,
+      initialRoute: '/login',
       routes: {
         '/': (context) => const Dashboard(title: 'My trainings'),
         '/login': (context) => const LoginPage(),

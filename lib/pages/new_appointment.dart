@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:ubb_flutter_pt_app/dao/appointment_dao.dart';
+import 'package:ubb_flutter_pt_app/dao/session_type_dao.dart';
+import 'package:ubb_flutter_pt_app/model/store/session_type.dart';
+import 'package:ubb_flutter_pt_app/state/auth_provider.dart';
 
 class NewAppointment extends StatefulWidget {
   const NewAppointment({super.key});
@@ -10,9 +14,12 @@ class NewAppointment extends StatefulWidget {
 }
 
 class _NewAppointmentState extends State<NewAppointment> {
+  List<SessionType> _sessionTypes = [];
+  late SessionType _selectedSessionType;
+  String? _selectedTimeInterval;
   DateTime _selectedDate = DateTime.now();
   DateTime _focusedDate = DateTime.now();
-  String? _selectedTimeInterval;
+  final AppointmentDao _appointmentDao = AppointmentDao();
 
   // Generate time intervals from 9:00 AM to 10:00 PM
   List<String> get _timeIntervals {
@@ -32,6 +39,8 @@ class _NewAppointmentState extends State<NewAppointment> {
   void initState() {
     super.initState();
     _selectedTimeInterval = _timeIntervals.first; // Set the default interval
+
+    _initSessionTypes();
   }
 
   @override
@@ -139,6 +148,13 @@ class _NewAppointmentState extends State<NewAppointment> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
+                  _appointmentDao.saveAppointment(
+                      AuthProvider.userDataStatic!.email,
+                      _selectedDate,
+                      _selectedTimeInterval!,
+                      _selectedSessionType
+                  );
+
                   // Perform the action to save the selected date and time
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -147,6 +163,8 @@ class _NewAppointmentState extends State<NewAppointment> {
                       ),
                     ),
                   );
+
+                  Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0), // Make button larger
@@ -159,5 +177,14 @@ class _NewAppointmentState extends State<NewAppointment> {
         ),
       ),
     );
+  }
+
+  Future<void> _initSessionTypes() async {
+    final SessionTypeDao sessionTypeDao = SessionTypeDao();
+
+    this._sessionTypes = await sessionTypeDao.getSessionTypes();
+    if (_sessionTypes.isNotEmpty) {
+      this._selectedSessionType = this._sessionTypes.first;
+    }
   }
 }

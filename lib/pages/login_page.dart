@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ubb_flutter_pt_app/model/login_method.dart';
-import 'package:ubb_flutter_pt_app/state/AuthProvider.dart';
+import 'package:ubb_flutter_pt_app/state/auth_provider.dart';
 
 
 class LoginPage extends StatelessWidget {
