@@ -35,14 +35,17 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
         .where((appointment) => appointment.date.isAfter(DateTime.now()))
         .toList();
     upcomingAppointments.sort((a, b) => a.date.compareTo(b.date));
-    this.upcomingAppointments = upcomingAppointments;
 
     // Initialize past appointments
     List<Appointment> pastAppointments = appointments
         .where((appointment) => appointment.date.isBefore(DateTime.now()))
         .toList();
     pastAppointments.sort((a, b) => b.date.compareTo(a.date));
-    this.pastAppointments = pastAppointments;
+
+    setState(() {
+      this.upcomingAppointments = upcomingAppointments;
+      this.pastAppointments = pastAppointments;
+    });
   }
 
   @override
