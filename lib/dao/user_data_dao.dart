@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ubb_flutter_pt_app/model/login_method.dart';
-import 'package:ubb_flutter_pt_app/model/userdata.dart';
+import 'package:ubb_flutter_pt_app/model/store/userdata.dart';
 
 class UserDataDao {
   final FirebaseFirestore _db = FirebaseFirestore.instance;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ubb_flutter_pt_app/extensions/string_extensions.dart';
 
-import '../state/AuthProvider.dart' as local_auth_provider; // my auth provider
+import '../state/auth_provider.dart' as local_auth_provider; // my auth provider
 
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});

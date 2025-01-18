@@ -2,15 +2,17 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubb_flutter_pt_app/dao/user_data_dao.dart';
 import 'package:ubb_flutter_pt_app/model/login_method.dart';
+import 'package:ubb_flutter_pt_app/state/navigation_service.dart';
 import 'package:ubb_flutter_pt_app/utils/toast.dart';
 
 import '../model/shared_pref_constants.dart';
 import '../model/user_role.dart';
-import '../model/userdata.dart';
+import '../model/store/userdata.dart';
 
 class AuthProvider extends ChangeNotifier {
   final String KEY_EMAIL = "email";
@@ -31,19 +33,20 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider.withAuthenticated(String authMethod, String accessToken,
       String idToken) {
     if (authMethod == AuthMethod.google.value) {
-      _loginWithGoogleAtAppStart(idToken, accessToken);
       _isLoggedIn = true;
+      _loginWithGoogleAtAppStart(idToken, accessToken, null);
     } else {
       log("Unknown auth method: $authMethod");
     }
   }
 
-  bool _isLoggedIn = false;
+  static bool _isLoggedIn = false;
   static UserData? _userData;
 
   bool get isLoggedIn => _isLoggedIn;
-  static UserData? get userDataStatic => _userData;
+  static bool get isLoggedInStatic => _isLoggedIn;
   UserData? get userData => _userData;
+  static UserData? get userDataStatic => _userData;
 
   void login(BuildContext context, AuthMethod loginMethod) async {
     switch (loginMethod) {
@@ -55,8 +58,9 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  _setLoggedInAndNotify() {
+  _setLoggedInAndNotify(UserData userData) {
     _isLoggedIn = true; // Set the value
+    _userData = userData;
     notifyListeners(); // Notify listeners about the change
   }
 
@@ -69,13 +73,21 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _loginWithGoogleAtAppStart(String idToken, String accessToken) async {
+  void _loginWithGoogleAtAppStart(String idToken, String accessToken,
+      BuildContext? context) async {
     OAuthCredential oAuthCredential = GoogleAuthProvider.credential(
       accessToken: accessToken,
       idToken: idToken,
     );
 
-    _trySigningInWithAuthCredential(AuthMethod.google, oAuthCredential, null);
+    try {
+      await _trySigningInWithAuthCredential(AuthMethod.google, oAuthCredential,
+          context);
+    } finally {
+      Navigator.of(NavigationService.navigatorKey.currentContext!)
+          .pushNamedAndRemoveUntil('/', (route) => false);
+      FlutterNativeSplash.remove();
+    }
   }
 
   void _loginWithGoogle(BuildContext context) async {
@@ -110,7 +122,7 @@ class AuthProvider extends ChangeNotifier {
         context);
   }*/
 
-  void _trySigningInWithAuthCredential(AuthMethod authMethod,
+  Future<void> _trySigningInWithAuthCredential(AuthMethod authMethod,
       OAuthCredential oauthCredential, BuildContext? context) async {
     try {
       UserCredential userCredential =
@@ -125,7 +137,7 @@ class AuthProvider extends ChangeNotifier {
 
           String email = userCredential.additionalUserInfo!.profile![KEY_EMAIL];
           var checkUserData = UserData(email, authMethod, UserRole.user);
-          _handleSuccessFullLogin(context, oauthCredential, checkUserData);
+          await _handleSuccessFullLogin(context, oauthCredential, checkUserData);
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -146,24 +158,21 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  void _registerUserIfNotExists(UserData checkUserData) async {
-    var foundUserData = await _userDataDao.getUserData(checkUserData.email,
+  Future<void> _registerUserIfNotExists(UserData checkUserData) async {
+    UserData? foundUserData = await _userDataDao.getUserData(checkUserData.email,
         checkUserData.authMethod);
-    if (foundUserData != null) {
-      _userData = UserData(foundUserData.email, foundUserData.authMethod,
-          foundUserData.userRole);
-    } else {
-      await _userDataDao.saveUserData(
-          UserData(checkUserData.email, checkUserData.authMethod,
-              UserRole.user));
-      _userData = UserData(checkUserData.email, checkUserData.authMethod,
-          UserRole.user);
-    }
 
-    _setLoggedInAndNotify();
+    if (foundUserData != null) {
+      _setLoggedInAndNotify(foundUserData);
+    } else {
+      final UserData userData = UserData(checkUserData.email,
+          checkUserData.authMethod, UserRole.user);
+      await _userDataDao.saveUserData(userData);
+      _setLoggedInAndNotify(userData);
+    }
   }
 
-  void _saveUserDataToSharedPreferences(OAuthCredential oauthCredential,
+  Future<void> _saveUserDataToSharedPreferences(OAuthCredential oauthCredential,
       AuthMethod authMethod) async {
     final sharedPreferences = await SharedPreferences.getInstance();
 
@@ -184,11 +193,11 @@ class AuthProvider extends ChangeNotifier {
     await sharedPreferences.remove(authMethodKey);
   }
 
-  void _handleSuccessFullLogin(BuildContext? context,
+  Future<void> _handleSuccessFullLogin(BuildContext? context,
       OAuthCredential oauthCredential, UserData checkUserData) async {
 
-    _registerUserIfNotExists(checkUserData);
-    _saveUserDataToSharedPreferences(oauthCredential, checkUserData.authMethod);
+    await _registerUserIfNotExists(checkUserData);
+    await _saveUserDataToSharedPreferences(oauthCredential, checkUserData.authMethod);
 
     if (context != null && context.mounted) {
       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);

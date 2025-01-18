@@ -5,7 +5,7 @@ import 'package:ubb_flutter_pt_app/model/trainer_bottomnav_option_types.dart';
 import 'package:ubb_flutter_pt_app/model/user_bottomnav_option_types.dart';
 import 'package:ubb_flutter_pt_app/model/user_role.dart';
 
-import '../state/AuthProvider.dart';
+import '../state/auth_provider.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key, required this.title});
