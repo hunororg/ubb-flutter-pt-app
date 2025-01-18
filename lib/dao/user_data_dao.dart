@@ -6,6 +6,11 @@ class UserDataDao {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final String _usersCollection = 'users';
 
+  Future<List<UserData>> getAllUsers() async {
+    final querySnapshot = await _db.collection(_usersCollection).get();
+    return querySnapshot.docs.map((doc) => UserData.fromDocument(doc)).toList();
+  }
+
   Future<UserData?> getUserData(String email, AuthMethod authMethod) async {
     try {
       final querySnapshot = await _db
