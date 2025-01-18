@@ -50,12 +50,6 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
 
   @override
   Widget build(BuildContext context) {
-    // TrainingSession(
-    //     title: 'Leg workout',
-    //     location: '18 Gym',
-    //     trainerName: 'Asztalos Levente',
-    //     dateTime: DateTime.now().add(Duration(days: 7)),
-
     return Scaffold(
       body: Center(
           child: Column(
