@@ -64,12 +64,6 @@ class _NewAppointmentState extends State<NewAppointment> {
               focusedDay: _focusedDate,
               selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
               onDaySelected: (selectedDay, focusedDay) {
-                if (selectedDay.isBefore(DateTime.now())) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Cannot select past dates!')),
-                  );
-                  return;
-                }
                 setState(() {
                   _selectedDate = selectedDay;
                   _focusedDate = focusedDay;
