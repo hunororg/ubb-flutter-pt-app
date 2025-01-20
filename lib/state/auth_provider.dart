@@ -16,6 +16,7 @@ import '../model/store/userdata.dart';
 
 class AuthProvider extends ChangeNotifier {
   final String KEY_EMAIL = "email";
+  final String KEY_NAME = "name";
 
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   /*final GitHubSignIn _githubSignIn = GitHubSignIn(
@@ -135,8 +136,14 @@ class AuthProvider extends ChangeNotifier {
             return;
           }
 
-          String email = userCredential.additionalUserInfo!.profile![KEY_EMAIL];
-          var checkUserData = UserData(email, authMethod, UserRole.user);
+          if (!userCredential.additionalUserInfo!.profile!.containsKey(KEY_NAME)) {
+            _handleErrorLogin(context, "No name found in Google profile");
+            return;
+          }
+
+          final String email = userCredential.additionalUserInfo!.profile![KEY_EMAIL];
+          final String name = userCredential.additionalUserInfo!.profile![KEY_NAME];
+          var checkUserData = UserData(email, name, authMethod, UserRole.user);
           await _handleSuccessFullLogin(context, oauthCredential, checkUserData);
         }
       }
@@ -166,7 +173,7 @@ class AuthProvider extends ChangeNotifier {
       _setLoggedInAndNotify(foundUserData);
     } else {
       final UserData userData = UserData(checkUserData.email,
-          checkUserData.authMethod, UserRole.user);
+          checkUserData.name, checkUserData.authMethod, UserRole.user);
       await _userDataDao.saveUserData(userData);
       _setLoggedInAndNotify(userData);
     }
@@ -197,7 +204,8 @@ class AuthProvider extends ChangeNotifier {
       OAuthCredential oauthCredential, UserData checkUserData) async {
 
     await _registerUserIfNotExists(checkUserData);
-    await _saveUserDataToSharedPreferences(oauthCredential, checkUserData.authMethod);
+    await _saveUserDataToSharedPreferences(oauthCredential,
+        checkUserData.authMethod);
 
     if (context != null && context.mounted) {
       Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);

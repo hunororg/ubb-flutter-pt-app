@@ -126,8 +126,7 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        // 'with ${appointment.trainerName}',
-                        'with HARDCODED TRAINER NAME',
+                        'with ${appointment.sessionType.trainerName}',
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                       Text(appointment.sessionType.location),

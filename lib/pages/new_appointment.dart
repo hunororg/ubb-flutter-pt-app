@@ -150,6 +150,7 @@ class _NewAppointmentState extends State<NewAppointment> {
                 onPressed: () {
                   _appointmentDao.saveAppointment(
                       AuthProvider.userDataStatic!.email,
+                      AuthProvider.userDataStatic!.name,
                       _selectedDate,
                       _selectedTimeInterval!,
                       _selectedSessionType

@@ -18,11 +18,29 @@ class AppointmentDao {
         .toList();
   }
 
-  Future<void> saveAppointment(String userEmail, DateTime date,
+  Future<List<Appointment>> getAppointmentsForDateAndTrainer(DateTime date,
+      String trainerEmail) async {
+    final DateTime startOfDay = DateTime(date.year, date.month, date.day);
+    final DateTime endOfDay = DateTime(date.year, date.month, date.day, 23, 59, 59);
+
+    final querySnapshot = await _db
+        .collection(_appointmentsCollection)
+        .where('sessionType.trainerEmail', isEqualTo: trainerEmail)
+        .where('date', isGreaterThanOrEqualTo: startOfDay)
+        .where('date', isLessThanOrEqualTo: endOfDay)
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => Appointment.fromDocument(doc))
+        .toList();
+  }
+
+  Future<void> saveAppointment(String userEmail, String userName, DateTime date,
       String timeInterval, SessionType sessionType) async {
 
     await _db.collection(_appointmentsCollection).add({
       'userEmail': userEmail,
+      'userName': userName,
       'date': date,
       'timeInterval': timeInterval,
       'sessionType': sessionType.toMap(),
