@@ -91,7 +91,14 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
   }
 
   Widget _buildTrainingCard(Appointment appointment, bool future) {
-    return Container(
+    return GestureDetector(
+        onTap: () {
+      // Navigate to the detailed view of the appointment
+      Navigator.pushNamed(context, '/appointment-detailed',
+          arguments: appointment);
+    },
+    child:
+      Container(
         margin: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
           border: Border(
@@ -138,6 +145,7 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
             ),
           ),
         )
+      )
     );
   }
 
