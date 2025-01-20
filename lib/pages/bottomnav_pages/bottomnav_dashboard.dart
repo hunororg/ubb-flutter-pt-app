@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ubb_flutter_pt_app/dao/appointment_dao.dart';
+import 'package:ubb_flutter_pt_app/pages/appointment_detailed.dart';
 import 'package:ubb_flutter_pt_app/state/auth_provider.dart';
 
 import '../../model/store/appointment.dart';
@@ -94,8 +95,8 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
     return GestureDetector(
         onTap: () {
       // Navigate to the detailed view of the appointment
-      Navigator.pushNamed(context, '/appointment-detailed',
-          arguments: appointment);
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          AppointmentDetailed(appointment: appointment)));
     },
     child:
       Container(

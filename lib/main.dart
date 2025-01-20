@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:ubb_flutter_pt_app/state/navigation_service.dart';
 import 'firebase_options.dart';
 
+import 'model/store/appointment.dart';
 import 'pages/login_page.dart';
 
 void main() async {
@@ -60,7 +61,6 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/user-profile': (context) => const UserProfile(),
         '/new-appointment': (context) => const NewAppointment(),
-        '/appointment-detailed': (context) => const AppointmentDetailed(),
       },
     );
   }
