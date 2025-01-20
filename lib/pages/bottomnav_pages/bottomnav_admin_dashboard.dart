@@ -139,7 +139,7 @@ class _BottomNavAdminDashboardState extends State<BottomNavAdminDashboard> {
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                       Text(appointment.sessionType.location),
-                      Text(DateFormat('EEE, MMM d, yyyy - hh:mm a').format(appointment.date)),
+                      Text("${DateFormat('EEE, MMM d, yyyy').format(appointment.date)} between ${appointment.timeInterval}"),
                     ],
                   ),
                 ),
