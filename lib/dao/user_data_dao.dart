@@ -33,6 +33,7 @@ class UserDataDao {
   Future<void> saveUserData(UserData userData) async {
      await _db.collection(_usersCollection).add({
       'email': userData.email,
+      'name': userData.name,
       'authMethod': userData.authMethod.value,
       'userRole': userData.userRole.value,
     });

@@ -16,12 +16,13 @@ class SessionTypeDao {
   }
 
   Future<void> saveSessionType(String title, String location,
-      int duration, String trainerEmail) async {
+      int duration, String trainerEmail, String trainerName) async {
     await _db.collection(_sessionTypesCollection).add({
       'title': title,
       'location': location,
       'duration': duration,
       'trainerEmail': trainerEmail,
+      'trainerName': trainerName,
     });
   }
 }
