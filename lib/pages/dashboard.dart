@@ -92,13 +92,16 @@ class _MyHomePageState extends State<Dashboard> {
           );
         },
       ),
-      floatingActionButton: AuthProvider.userDataStatic!.userRole == UserRole.user ? FloatingActionButton(
+      floatingActionButton: (AuthProvider.userDataStatic != null &&
+          AuthProvider.userDataStatic!.userRole == UserRole.user)
+          ? FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed('/new-appointment');
         },
         tooltip: 'Add Appointment',
         child: const Icon(Icons.add),
-      ) : null,
+      )
+          : null,
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         selectedIndex: currentPageIndex,
