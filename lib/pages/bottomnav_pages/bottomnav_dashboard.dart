@@ -20,7 +20,6 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
   @override
   void initState() {
     super.initState();
-
     initUpcomingAppointments();
   }
 
@@ -28,8 +27,8 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
     final String userEmail = AuthProvider.userDataStatic!.email;
     final AppointmentDao appointmentDao = AppointmentDao();
 
-    final List<Appointment> appointments = await appointmentDao
-        .getAppointmentsByUser(userEmail);
+    final List<Appointment> appointments =
+    await appointmentDao.getAppointmentsByUser(userEmail);
 
     // Initialize upcoming appointments
     List<Appointment> upcomingAppointments = appointments
@@ -51,14 +50,29 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    final String? userName = AuthProvider.userDataStatic?.name;
+
     return Scaffold(
       body: Center(
-          child: Column(
-            children: [
-              _buildSection('Upcoming Training Sessions', upcomingAppointments, '/allUpcoming', true),
-              _buildSection('Past Training Sessions', pastAppointments, '/allPast', false),
-            ],
-          )
+        child: Column(
+          children: [
+            if (userName != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Text(
+                  'Hello, $userName!',
+                  style: const TextStyle(
+                    fontSize: 29, // Adjusted for smaller size
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            _buildSection('Upcoming Training Sessions', upcomingAppointments,
+                '/allUpcoming', true),
+            _buildSection('Past Training Sessions', pastAppointments,
+                '/allPast', false),
+          ],
+        ),
       ),
     );
   }
@@ -69,19 +83,24 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(title, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+          padding: const EdgeInsets.all(12.0),
+          child: Text(title,
+              style: const TextStyle(
+                  fontSize: 24, // Adjusted for smaller size
+                  fontWeight: FontWeight.bold)),
         ),
         SizedBox(
-          height: 300, // Adjust height as needed
+          height: 270, // Reduced height to prevent overflow
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: appointments.length + (appointments.length > 2 ? 1 : 0), // Add "See all" button
+            itemCount: appointments.length + (appointments.length > 2 ? 1 : 0),
             itemBuilder: (context, index) {
               if (index < appointments.length) {
                 return _buildTrainingCard(appointments[index], future);
               } else {
-                String buttonText = future ? "All future sessions >" : "All past sessions >";
+                String buttonText = future
+                    ? "All future sessions >"
+                    : "All past sessions >";
                 return _buildSeeAllButton(context, buttonText, seeAllRoute);
               }
             },
@@ -94,95 +113,79 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
   Widget _buildTrainingCard(Appointment appointment, bool future) {
     return GestureDetector(
         onTap: () {
-      // Navigate to the detailed view of the appointment
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-          AppointmentDetailed(appointment: appointment)));
-    },
-    child:
-      Container(
-        margin: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: !future ? Colors.green : Colors.transparent,
-              width: 5,
-            ),
-          ),
-        ),
-        child: Card(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
-          child: SizedBox(
-            width: 340, // Adjust width as needed
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.network(
-                  'https://media.istockphoto.com/id/1277242852/photo/holding-weight-and-sitting.jpg?s=612x612&w=0&k=20&c=3sy-VVhUYjABpNEMI2aoruXQuOVb__-AUR6BzOHoSJg=',
-                  height: 150,
-                  width: 340,
-                  fit: BoxFit.cover,
+          // Navigate to the detailed view of the appointment
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AppointmentDetailed(appointment: appointment)));
+        },
+        child: Container(
+            margin: const EdgeInsets.all(8.0), // Reduced margin for better layout
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: !future ? Colors.green : Colors.transparent,
+                  width: 3, // Reduced width of the border
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        appointment.sessionType.title,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'with ${appointment.sessionType.trainerName}',
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                      ),
-                      Text(appointment.sessionType.location),
-                      Text("${DateFormat('EEE, MMM d, yyyy').format(appointment.date)} between ${appointment.timeInterval}"),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        )
-      )
-    );
+            child: Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+              child: SizedBox(
+                width: 300, // Adjusted width to prevent overflow
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.network(
+                      'https://media.istockphoto.com/id/1277242852/photo/holding-weight-and-sitting.jpg?s=612x612&w=0&k=20&c=3sy-VVhUYjABpNEMI2aoruXQuOVb__-AUR6BzOHoSJg=',
+                      height: 120, // Reduced height
+                      width: 300, // Adjusted width
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            appointment.sessionType.title,
+                            style: const TextStyle(
+                                fontSize: 16, // Reduced font size
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'with ${appointment.sessionType.trainerName}',
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                          Text(appointment.sessionType.location),
+                          Text(
+                              "${DateFormat('EEE, MMM d, yyyy').format(appointment.date)} between ${appointment.timeInterval}"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )));
   }
 
-  Widget _buildSeeAllButton(BuildContext context, String buttonText, String route) {
+  Widget _buildSeeAllButton(
+      BuildContext context, String buttonText, String route) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: TextButton(
         onPressed: () {
           Navigator.pushNamed(context, route);
         },
-        child: Text(buttonText, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        child: Text(buttonText,
+            style: const TextStyle(
+                fontSize: 16, // Adjusted font size
+                fontWeight: FontWeight.bold)),
       ),
     );
   }
-
-  // DONT REMOVE THIS,MIGHT BE NEEDED
-  // Future<bool> waitForConditionWithAbortCondition(
-  //     bool Function() fulfillmentCondition,
-  //     bool Function() instantAbortCondition,
-  //     {Duration checkInterval = const Duration(milliseconds: 200),
-  //       Duration timeout = const Duration(seconds: 30)}) async {
-  //   bool response = true;
-  //   bool done = false;
-  //   Future.delayed(
-  //     timeout,
-  //         () {
-  //       response = false;
-  //       done = true;
-  //     },
-  //   );
-  //   while (!fulfillmentCondition()) {
-  //     await Future.delayed(checkInterval);
-  //     if (done || instantAbortCondition()) {
-  //       break;
-  //     }
-  //   }
-  //   return response;
-  // }
 }
