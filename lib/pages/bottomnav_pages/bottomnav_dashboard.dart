@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ubb_flutter_pt_app/dao/appointment_dao.dart';
+import 'package:ubb_flutter_pt_app/pages/appointment_detailed.dart';
 import 'package:ubb_flutter_pt_app/state/auth_provider.dart';
 
 import '../../model/store/appointment.dart';
@@ -91,7 +92,14 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
   }
 
   Widget _buildTrainingCard(Appointment appointment, bool future) {
-    return Container(
+    return GestureDetector(
+        onTap: () {
+      // Navigate to the detailed view of the appointment
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          AppointmentDetailed(appointment: appointment)));
+    },
+    child:
+      Container(
         margin: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
           border: Border(
@@ -138,6 +146,7 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
             ),
           ),
         )
+      )
     );
   }
 

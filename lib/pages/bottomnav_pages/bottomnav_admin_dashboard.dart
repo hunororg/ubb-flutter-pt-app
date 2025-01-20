@@ -73,13 +73,13 @@ class _BottomNavAdminDashboardState extends State<BottomNavAdminDashboard> {
               padding: const EdgeInsets.all(12),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,  // Example: Error alert
+                color: _appointments.isEmpty ? Colors.orange.shade100 : Colors.blue.shade50,  // Example: Error alert
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 _appointments.isEmpty ? "You don't have any appointments this day!"
                 : "You have ${_appointments.length} appointments this day!",
-                style: TextStyle(color: Colors.blue.shade800,
+                style: TextStyle(color: _appointments.isEmpty ? Colors.blue.shade900 : Colors.blue.shade800,
                     fontWeight: FontWeight.bold),
               ),
             ),

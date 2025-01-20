@@ -3,6 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubb_flutter_pt_app/model/shared_pref_constants.dart';
+import 'package:ubb_flutter_pt_app/pages/appointment_detailed.dart';
 import 'package:ubb_flutter_pt_app/pages/dashboard.dart';
 import 'package:ubb_flutter_pt_app/pages/new_appointment.dart';
 import 'package:ubb_flutter_pt_app/pages/user_profile.dart';
@@ -11,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:ubb_flutter_pt_app/state/navigation_service.dart';
 import 'firebase_options.dart';
 
+import 'model/store/appointment.dart';
 import 'pages/login_page.dart';
 
 void main() async {
@@ -46,8 +48,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-
     return MaterialApp(
       title: 'Trainer App',
       theme: ThemeData(
