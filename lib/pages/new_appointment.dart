@@ -20,24 +20,40 @@ class _NewAppointmentState extends State<NewAppointment> {
   DateTime _selectedDate = DateTime.now();
   DateTime _focusedDate = DateTime.now();
   final AppointmentDao _appointmentDao = AppointmentDao();
+  final List<String> _timeIntervals = [];
 
   // Generate time intervals from 9:00 AM to 10:00 PM
-  List<String> get _timeIntervals {
+  void _reloadTimeIntervals(DateTime selectedDate) {
     final List<String> intervals = [];
-    DateTime startTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, 9);
+
+    DateTime startTime;
+    if (selectedDate.day <= DateTime.now().day) {
+      startTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, DateTime.now().hour + 1);
+    } else {
+      startTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, 9);
+    }
+
     DateTime endTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day, 22);
 
     while (startTime.isBefore(endTime)) {
-      final end = startTime.add(const Duration(hours: 1, minutes: 30));
+      final end = startTime.add(const Duration(hours: 1));
       intervals.add('${DateFormat('hh:mm a').format(startTime)} - ${DateFormat('hh:mm a').format(end)}');
       startTime = end;
     }
-    return intervals;
+
+    setState(() {
+      _timeIntervals.clear();
+      _timeIntervals.addAll(intervals);
+    });
+
+    intervals;
   }
 
   @override
   void initState() {
     super.initState();
+
+    _reloadTimeIntervals(DateTime.now());
     _selectedTimeInterval = _timeIntervals.first; // Set the default interval
 
     _initSessionTypes();
@@ -67,6 +83,8 @@ class _NewAppointmentState extends State<NewAppointment> {
                 setState(() {
                   _selectedDate = selectedDay;
                   _focusedDate = focusedDay;
+
+                  _reloadTimeIntervals(selectedDay);
                   _selectedTimeInterval = _timeIntervals.first; // Reset time interval on date change
                 });
               },

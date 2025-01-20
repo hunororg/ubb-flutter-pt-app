@@ -72,7 +72,7 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
           child: Text(title, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
         ),
         SizedBox(
-          height: 270, // Adjust height as needed
+          height: 300, // Adjust height as needed
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: appointments.length + (appointments.length > 2 ? 1 : 0), // Add "See all" button
@@ -106,14 +106,14 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
             borderRadius: BorderRadius.zero,
           ),
           child: SizedBox(
-            width: 300, // Adjust width as needed
+            width: 340, // Adjust width as needed
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.network(
-                  'https://media.istockphoto.com/id/625739874/ro/fotografie/exercitii-grele-de-greutate.jpg?s=1024x1024&w=is&k=20&c=t56T-dIE5s4MrdHdwnfw4DCNzI_TmnKKYCZOOlRD6Ns=',
-                  height: 120,
-                  width: 300,
+                  'https://media.istockphoto.com/id/1277242852/photo/holding-weight-and-sitting.jpg?s=612x612&w=0&k=20&c=3sy-VVhUYjABpNEMI2aoruXQuOVb__-AUR6BzOHoSJg=',
+                  height: 150,
+                  width: 340,
                   fit: BoxFit.cover,
                 ),
                 Padding(
@@ -130,7 +130,7 @@ class _BottomNavDashboardState extends State<BottomNavDashboard> {
                         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                       Text(appointment.sessionType.location),
-                      Text(DateFormat('EEE, MMM d, yyyy - hh:mm a').format(appointment.date)),
+                      Text("${DateFormat('EEE, MMM d, yyyy').format(appointment.date)} between ${appointment.timeInterval}"),
                     ],
                   ),
                 ),
